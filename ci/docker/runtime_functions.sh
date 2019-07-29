@@ -1235,6 +1235,42 @@ build_docs() {
     popd
 }
 
+
+build_clojure_docs() {
+    set -ex
+    pushd .
+
+    clojure_path =  'contrib/clojure-package'
+    clojure_doc_path ='contrib/clojure-package/target/doc'
+    clojure_doc_artifact = 'docs/_build/artifacts-clojure.tgz'
+
+    pushd clojure_path
+    lein codox
+    popd
+
+    tar -zcvf clojure_doc_artifact clojure_doc_path
+
+    popd
+}
+
+
+build_julia_docs() {
+    set -ex
+    pushd .
+
+    julia_doc_path = 'julia/docs/site/'
+    julia_doc_artifact = 'docs/_build/artifacts-julia.tgz'
+
+    export MXNET_HOME=$(pwd)
+    echo "Julia will check for MXNet in $MXNET_HOME/lib"
+
+    make -C julia/docs
+
+    tar -zcvf julia_doc_artifact julia_doc_path
+
+    popd
+}
+
 # Functions that run the nightly Tests:
 
 #Runs Apache RAT Check on MXNet Source for License Headers
