@@ -1271,6 +1271,32 @@ build_julia_docs() {
     popd
 }
 
+build_r_docs() {
+    set -ex
+    pushd .
+
+    build_setup
+
+    repo="new_docs_r"
+    fetch_new_docs_repo $repo
+
+    doc_path="$repo/Rsite/build"
+    doc_artifact='docs/_build/r-artifacts.tgz'
+
+    pushd $repo/Rsite
+    eval "$($HOME/miniconda2/bin/conda shell.bash hook)"
+    conda activate mxnet-docs
+
+    make html EVAL=0
+
+    popd
+
+    tar zcvf $doc_artifact $doc_path
+
+    popd
+}
+
+
 # Functions that run the nightly Tests:
 
 #Runs Apache RAT Check on MXNet Source for License Headers
